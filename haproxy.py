@@ -5,15 +5,17 @@ class HAProxyConfig():
         self.globalh = self.getGlobal()
 
     def getSection(self):
+        section_array = ['listen', 'frontend', 'defaults', 'backend']
         f= open(self.config_path)
         lines= f.readlines()
 
         for line in lines:
             line = line.strip()
             if  line == 'global':
-                print line
+                continue
 
-            elif line.startswith("\S"):
+            #ayb
+            elif line in section_array:
                 print line
 
             else:
