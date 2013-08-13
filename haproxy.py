@@ -11,15 +11,29 @@ class HAProxyConfig():
 
         for line in lines:
             line = line.strip()
-            if  line == 'global':
-                continue
+	    
 
-            #ayb
-            elif line in section_array:
-                print line
+	    start =1 
+	    if start == 1:
+	       
+	       if "#" in line:
+	           start = 0
+	       elif line == 'global':
+	           start = 0
+	       elif line in section_array:
+                   start =0
+	       elif line.startswith("listen"):
+		   start =0
+	       elif line.startswith("frontend"):
+		   start =0
+	       elif line.startswith("backend"):
+		  start =0
+	       else:
+	           print line 
+		    
+	    
+	    
 
-            else:
-                break
         
         return 1
 
