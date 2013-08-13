@@ -1,16 +1,13 @@
-class HAProxyConfig():
+class HAproxyConfig():
     def __init__(self, config_path):
-        self.config_path = config_path
-        self.config = self.getConfig(self.config_path)
+    	self.config_path = config_path
+    	self.config = self.getConfig(self.config_path)
         self.globalh = self.getGlobal()
-
+        
         print config_path
 
-    def getGlobal(self):
-        return 1
-
     def getSection(self):
-        f= open(self.config_path)
+    	f= open(self.config_path)
         lines= f.readlines()
 
         for line in lines:
@@ -22,19 +19,16 @@ class HAProxyConfig():
 
             elif line.strip() == 'defaults':
                break
-
-
-
-
         return 1
 
+
+    def getGlobal(self):
+        return 1
 
     def getConfig(self, config_path):
         config = open(config_path).read()
         return config
 
-
 class Global():
-    def __init__(self):
-        return 1
-~                  
+    def __init__(self): 
+	return 1
