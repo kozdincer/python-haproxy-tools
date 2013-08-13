@@ -1,4 +1,4 @@
-class HAproxyConfig():
+class HAProxyConfig():
     def __init__(self, config_path):
     	self.config_path = config_path
     	self.config = self.getConfig(self.config_path)
