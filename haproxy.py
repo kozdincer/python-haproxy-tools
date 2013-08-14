@@ -6,12 +6,12 @@ class HAProxyConfig():
 	def __init__(self, config_path):
 		self.config_path = config_path
 		self.config = self.getConfig(self.config_path)
-		
 		self.globalh = self.getGlobal()
 		self.defaults = self.getDefaults()
 		self.listen = self.getListen()
 		self.frontend = self.getFrontend()
 		self.backend = self.getBackend()
+	
 	def getSection(self, section):
 		config_array = [] 
 		section = section.strip()
@@ -41,19 +41,19 @@ class HAProxyConfig():
 		return config_array
 	
 	def getGlobal(self):
-		return getSection('global')
+		return self.getSection('global')
 
 	def getDefaults(self):
-		return getSection('defaults')
+		return self.getSection('defaults')
 
 	def getListen(self):
-		return getSection('listen')
+		return self.getSection('listen')
 
 	def getFrontend(self):
-		return getSection('frontend')
+		return self.getSection('frontend')
 
 	def getBackend(self):
-		return getSection('backend')
+		return self.getSection('backend')
 
 	def getConfig(self, config_path):
 		config_file = open(config_path)
