@@ -1,3 +1,8 @@
 from haproxy import HAProxyConfig
-my_config = HAProxyConfig('configs/1.conf')
-my_config.getSection('defaults')
+for i in range(1,6):
+    my_config = HAProxyConfig('configs/%d.conf' %i)
+    print "Config", str(i)
+    print "--------"
+    print my_config.getSection('backend')
+    print ""
+    print ""

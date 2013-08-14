@@ -1,34 +1,41 @@
 
-SECTIONS = ['global','listen', 'frontend', 'defaults', 'backend']
+SECTIONS = ['global','defaults', 'listen', 'frontend', 'backend']
 
 class HAProxyConfig():
     def __init__(self, config_path):
         self.config_path = config_path
-	      self.config = self.getConfig(self.config_path)
-	      self.globalh = self.getGlobal()
+        self.config = self.getConfig(self.config_path)
+        self.globalh = self.getGlobal()
 	
     def getSection(self, section):
-	      f = open(self.config_path)
-	      lines = f.readlines()
-	      f.close()
-	      for line in lines:
-	          line = line.strip()
-	    
-	          if section in SECTIONS:
-		            if section in line:
-                    print line
-	              elif line.startswith(" "):
-		                print line
-		            elif line.startswith("#"):
-		                continue
-	              elif line in section:
-		                break 
-		            else:
-		                print line 
-	      return 1
+        config_array = [] 
+        section = section.strip()
+        f = open(self.config_path)
+        lines = f.readlines()
+        f.close()
+        start_flag = False
+        
+        for line in lines:
+            line = line.strip()
+            if line == '':
+                continue
+            
+            sline = line.split()[0]
+            
+            if sline == section:
+                start_flag = True
+                continue
+            
+            if sline in SECTIONS:
+                start_flag = False
+            
+            if start_flag:
+                config_array.append(line)
+        
+        return config_array
 
     def getGlobal(self):
-	      return 1
+	      return getSection('global')
 
     def getConfig(self, config_path):
 	      config_file = open(config_path)
