@@ -1,4 +1,4 @@
 from haproxy import HAProxyConfig
-
-my_config = HAProxyConfig('configs/1.conf')
-my_config.getGlobal()
+from haproxy import Global
+my_config = Global('configs/1.conf')
+print my_config.getParams('maxconn')
