@@ -1,4 +1,4 @@
-SECTIONS = ['global','defaults', 'listen', 'frontend', 'backend']
+from utils import *
 
 class HAProxyConfig():
 
