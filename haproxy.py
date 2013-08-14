@@ -10,10 +10,11 @@ class HAProxyConfig():
     def getSection(self, section):
         config_array = [] 
         section = section.strip()
+        start_flag = False
+        
         f = open(self.config_path)
         lines = f.readlines()
         f.close()
-        start_flag = False
         
         for line in lines:
             line = line.strip()
