@@ -66,8 +66,7 @@ class Global():
 
 	def __init__(self, config_array):
 		self.config_array = config_array	
-		self.params = []
-
+		self.params = [] 
 		for param in config_array:
 			param_name = self.getOptName(param).strip()
 			params = self.getOpts(param).strip()
@@ -79,11 +78,6 @@ class Global():
 	
 	def getOpts(self, param):
 		return ' '.join(param.split()[1:])
-	
 
-
-
-
-
-
-
+	def getParams(self, name):
+		return 1
