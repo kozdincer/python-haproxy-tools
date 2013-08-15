@@ -79,5 +79,12 @@ class Global():
 	def getOpts(self, param):
 		return ' '.join(param.split()[1:])
 
-	def getParams(self, name):
-		return 1
+	def getParam(self, name):
+		params = []
+		name = name.strip()
+		for param in self.params:
+			if name == param['name']:
+				params.append(param['params'])
+		return params
+
+
