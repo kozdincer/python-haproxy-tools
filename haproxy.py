@@ -82,9 +82,19 @@ class Global():
 	def getParam(self, name):
 		params = []
 		name = name.strip()
+
 		for param in self.params:
 			if name == param['name']:
 				params.append(param['params'])
-		return params
+		return params 
+		
+	def getParamAll(self, opt):
+		params1 = []
+		params2 = []
+		opt = opt.strip()
 
-
+		for param in self.params:
+			if opt == param['name']:
+				params1.append(param['params'])
+				params2.append(param['name'])
+		return params1 + params2
