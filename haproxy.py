@@ -7,7 +7,7 @@ class HAProxyConfig():
 		self.config_path = config_path
 		self.config = self.getConfig(self.config_path)
 		
-		self.globalh = self.getGlobal()
+		self.globalh = Global(self.getGlobal())
 		self.defaults = self.getDefaults()
 		self.listen = self.getListen()
 		self.frontend = self.getFrontend()
@@ -64,39 +64,23 @@ class HAProxyConfig():
 
 class Global():
 
+	def __init__(self, config_array):
+		param_array = []
+		for param in config_array:
+			param_dict = {'param_name' : 'log', 'params' : '125 local0' }
+			param_array.append(param_dict)
 
-	def __init__(self, config_path):
-		self.config_path = config_path
-		self.config = self.getConfig(self.config_path)
-		self.params = self.getArray()
+		print param_array
 
-	def getParams(self, params):
-		params_array = []
-		flag = False
-		f = open(self.config_path)
-		lines = f.readlines()
-		f.close()
-		
-		for line in lines:
-			if line == '':
-				continue
-			if params in line:
-				flag = True
-				continue
-			if line in GLOBAL_PARAMS:
-				flag = True
-			if flag:
-				params_array.append(line)
-				return params_array
+	def getParam(self, param_name):
+		pass
 
-		return params_array
 
-	def getArray(self):
-		return self.getParams('maxconn')
+	
 
-	def getConfig(self, config_path):
-		config_file = open(config_path)
-		config = config_file.read()
-		config_file.close()
-		return config
+
+
+
+
+
 
