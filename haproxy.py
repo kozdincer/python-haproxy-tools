@@ -98,3 +98,17 @@ class Global():
 				params1.append(param['params'])
 				params2.append(param['name'])
 		return params1 + params2
+	
+	def AddParam(self, add1, add2):
+		add1 = add1.strip()
+		add2 = add2.strip()
+		add = {add1: add2}
+		self.params.append(add)
+		return self.params 
+
+
+
+
+
+
+
