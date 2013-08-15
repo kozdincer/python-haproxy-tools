@@ -66,28 +66,19 @@ class Global():
 
 	def __init__(self, config_array):
 		self.config_array = config_array	
-		self.param_name = self.getParamname(self.config_array)
-		self.params = self.getParams(self.config_array)
-		param_array = []
-		arrayfor_name = []
-		arrayfor_params = []
+		self.params = []
 
 		for param in config_array:
-			param_dict = {'param_name' : arrayfor_name, 'params' : arrayfor_params }
-			param_array.append(param_dict)
+			param_name = self.getOptName(param).strip()
+			params = self.getOpts(param).strip()
+			pdict = {'name' : param_name, 'params' : params }
+			self.params.append(pdict)
 			
-			if self.param_name in config_array:
-				arrayfor_name.append(param_name)
-			if self.params in config_array:
-				arrayfor_params.append(params)
-
-		print param_array
-
-	def getParamname(self, param_name):
-		pass
-	def getParams(self, params):
-		pass
-
+	def getOptName(self, param):
+		return param.split()[0]
+	
+	def getOpts(self, param):
+		return ' '.join(param.split()[1:])
 	
 
 
