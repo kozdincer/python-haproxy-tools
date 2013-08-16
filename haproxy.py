@@ -2,114 +2,110 @@ from utils import *
 
 class HAProxyConfig():
 
-
-	def __init__(self, config_path):
-		self.config_path = config_path
-		self.config = self.getConfig(self.config_path)
+    def __init__(self, config_path):
+        self.config_path = config_path
+        self.config = self.getConfig(self.config_path)
 		
-		self.globalh = Global(self.getGlobal())
-		self.defaults = Defaults(self.getDefaults())
-		self.listen = self.getListen()
-		self.frontend = self.getFrontend()
-		self.backend = self.getBackend()
+        self.globalh = Global(self.getGlobal())
+       # self.defaults = Defaults(self.getDefaults())
+        self.listen = self.getListen()
+        self.frontend = self.getFrontend()
+        self.backend = self.getBackend()
 	
-	def getSection(self, section):
-		config_array = [] 
-		section = section.strip()
-		start_flag = False
+    def getSection(self, section):
+        config_array = [] 
+        section = section.strip()
+        start_flag = False
 
-		f = open(self.config_path)
-		lines = f.readlines()
-		f.close()
+        f = open(self.config_path)
+        lines = f.readlines()
+        f.close()
         
-		for line in lines:
-			line = line.strip()
-			if line == '':
-				continue
+        for line in lines:
+            line = line.strip()
+            if line == '':
+                continue
             
-			sline = line.split()[0]
+            sline = line.split()[0]
             
-			if sline == section:
-				start_flag = True
-				continue
+            if sline == section:
+                start_flag = True
+                continue
             
-			if sline in SECTIONS:
-				start_flag = False
+            if sline in SECTIONS:
+                start_flag = False
             
-			if start_flag:
-				config_array.append(line)
+            if start_flag:
+                config_array.append(line)
         
-		return config_array
+        return config_array
 	
-	def getGlobal(self):
-		return self.getSection('global')
+    def getGlobal(self):
+        return self.getSection('global')
 
-	def getDefaults(self):
-		return self.getSection('defaults')
+    def getDefaults(self):
+        return self.getSection('defaults')
 
-	def getListen(self):
-		return self.getSection('listen')
+    def getListen(self):
+        return self.getSection('listen')
 
-	def getFrontend(self):
-		return self.getSection('frontend')
+    def getFrontend(self):
+        return self.getSection('frontend')
 
-	def getBackend(self):
-		return self.getSection('backend')
+    def getBackend(self):
+        return self.getSection('backend')
 
-	def getConfig(self, config_path):
-		config_file = open(config_path)
-		config = config_file.read()
-		config_file.close()
-		return config
+    def getConfig(self, config_path):
+        config_file = open(config_path)
+        config = config_file.read()
+        config_file.close()
+        return config
+
 
 class Global():
-
-	def __init__(self, config_array):
-		self.config_array = config_array	
-		self.params = [] 
-		for param in config_array:
-			param_name = self.getOptName(param).strip()
-			params = self.getOpts(param).strip()
-			pdict = {'name' : param_name, 'params' : params }
-			self.params.append(pdict)
+    def __init__(self, config_array):
+        self.config_array = config_array	
+        self.params = [] 
+        for param in config_array:
+            param_name = self.getOptName(param).strip()
+            params = self.getOpts(param).strip()
+            pdict = {'name' : param_name, 'params' : params }
+            self.params.append(pdict)
 			
-	def getOptName(self, param):
-		return param.split()[0]
+    def getOptName(self, param):
+        return param.split()[0]
 	
-	def getOpts(self, param):
-		return ' '.join(param.split()[1:])
+    def getOpts(self, param):
+        return ' '.join(param.split()[1:])
 
-	def getParam(self, name):
-		params = []
-		name = name.strip()
+    def getParam(self, name):
+        params = []
+        name = name.strip()
 
-		for param in self.params:
-			if name == param['name']:
-				params.append(param['params'])
-		return params 
+        for param in self.params:
+            if name == param['name']:
+                params.append(param['params'])
+        return params 
 		
-	def getParamAll(self, opt):
-		params1 = []
-		params2 = []
-		opt = opt.strip()
+    def getParamAll(self, opt):
+        params1 = []
+        params2 = []
+        opt = opt.strip()
 
-		for param in self.params:
-			if opt == param['name']:
-				params1.append(param['params'])
-				params2.append(param['name'])
-		return params1 + params2
+        for param in self.params:
+            if opt == param['name']:
+                params1.append(param['params'])
+                params2.append(param['name'])
+        return params1 + params2
 	
-	def AddParam(self, add1, add2, *add3):
-		add = {add1: add2, '':add3}
-		self.params.append(add)
-		return self.params 
-	
-	def RemoveParam(self, rem1, rem2, *rem3):
-		rem = {rem1: rem2, '': rem3}
-		self.params.remove(rem)
-		return self.params
+    def addParam(self, param_name, *params):
+        add = {'name': param_name, 'params': params}
+        self.params.append(add)
+        return True
+    
+    def remParam(self, param_name, *params):
+        rem = {'name': param_name, 'params': params}
+        self.params.remove(rem)
+        return True
 
-class Defaults():
 
-	def __init__(self, defaults_array):
-			pass
