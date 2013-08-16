@@ -69,7 +69,7 @@ class Global():
         self.params = [] 
         for param in config_array:
             param_name = self.getOptName(param).strip()
-            params = self.getOpts(param).strip()
+            params = self.getOpts(param)
             pdict = {'name' : param_name, 'params' : params }
             self.params.append(pdict)
 			
@@ -77,7 +77,7 @@ class Global():
         return param.split()[0]
 	
     def getOpts(self, param):
-        return ' '.join(param.split()[1:])
+        return tuple(param.split()[1:])
 
     def getParam(self, name):
         params = []
@@ -112,9 +112,11 @@ class Global():
     def getConfigGlobal(self):
 		params = self.params
 		config_output = ""
-		config_output += self.title + '\n'
+		#config_output += self.title + '\n'
 		for param in self.params:
 			#config_output += '    ' + param + '\n'
 			print param
 		return config_output
-
+    
+    def sdictToStr(self, sdict):
+        pass
