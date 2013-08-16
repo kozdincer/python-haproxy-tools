@@ -108,14 +108,14 @@ class Global():
         self.params.remove(rem)
         return True
     
-	def getConfigGlobal(self):
-	    param = param.split()
+    def getConfigGlobal(self):
+        param = param.split()
         flag = False
 
         for param in self.config_array:
             sparam = param.split()[0]
             if param == '':
-				continue
+	        continue
             if sparam == 'global':
                 flag = True
             if sparam == 'defaults':
