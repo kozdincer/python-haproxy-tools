@@ -8,7 +8,7 @@ class HAProxyConfig():
 		self.config = self.getConfig(self.config_path)
 		
 		self.globalh = Global(self.getGlobal())
-		self.defaults = self.getDefaults()
+		self.defaults = Defaults(self.getDefaults())
 		self.listen = self.getListen()
 		self.frontend = self.getFrontend()
 		self.backend = self.getBackend()
@@ -99,16 +99,17 @@ class Global():
 				params2.append(param['name'])
 		return params1 + params2
 	
-	def AddParam(self, add1, add2):
-		add1 = add1.strip()
-		add2 = add2.strip()
-		add = {add1: add2}
+	def AddParam(self, add1, add2, *add3):
+		add = {add1: add2, '':add3}
 		self.params.append(add)
 		return self.params 
+	
+	def RemoveParam(self, rem1, rem2, *rem3):
+		rem = {rem1: rem2, '': rem3}
+		self.params.remove(rem)
+		return self.params
 
+class Defaults():
 
-
-
-
-
-
+	def __init__(self, defaults_array):
+			pass
