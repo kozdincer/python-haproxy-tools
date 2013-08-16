@@ -64,6 +64,7 @@ class HAProxyConfig():
 
 class Global():
     def __init__(self, config_array):
+	self.title = 'global'
         self.config_array = config_array	
         self.params = [] 
         for param in config_array:
@@ -109,19 +110,8 @@ class Global():
         return True
     
     def getConfigGlobal(self):
-        param = param.split()
-        flag = False
-
-        for param in self.config_array:
-            sparam = param.split()[0]
-            if param == '':
-	        continue
-            if sparam == 'global':
-                flag = True
-            if sparam == 'defaults':
-                break
-            if flag == True:
-                print param
-        return self.config_array
+	config_output = ''
+        params = self.params
+        return config_output
 
 
