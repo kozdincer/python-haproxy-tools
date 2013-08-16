@@ -100,20 +100,21 @@ class Global():
         return params1 + params2
 	
     def addParam(self, param_name, *params):
-        add = {'name': param_name, 'params': params}
-        self.params.append(add)
+        sdict = {'name': param_name, 'params': params}
+        self.params.append(sdict)
         return True
     
     def remParam(self, param_name, *params):
-        rem = {'name': param_name, 'params': params}
-        self.params.remove(rem)
+        sdict = {'name': param_name, 'params': params}
+        self.params.remove(sdict)
         return True
     
     def getConfigGlobal(self):
 		params = self.params
 		config_output = ""
 		config_output += self.title + '\n'
-		for param in self.config_array:
-			config_output += '    ' + param + '\n'
+		for param in self.params:
+			#config_output += '    ' + param + '\n'
+			print param
 		return config_output
 
