@@ -27,10 +27,10 @@ class HAProxyConfig():
         self.config = self.getConfig(self.config_path)
 		
         self.globalh = Global(self.getGlobal())
-        self.defaults = self.getDefaults()
-        self.listen = self.getListen()
-        self.frontend = self.getFrontend()
-        self.backend = self.getBackend()
+        self.defaults = Defaults(self.getDefaults())
+        self.listen = Listen(self.getListen())
+        self.frontend = Frontend(self.getFrontend())
+        self.backend = Backend(self.getBackend())
 	
     def getSection(self, section):
         config_array = [] 
@@ -128,15 +128,28 @@ class Global():
         sdict = {'name': param_name, 'params': params}
         self.params.remove(sdict)
         return True
-    
+
     def getConfigGlobal(self):
-		params = self.params
-		config_output = ""
-		#config_output += self.title + '\n'
-		for param in self.params:
-			#config_output += '    ' + param + '\n'
-			print param
-		return config_output
-    
-    def sdictToStr(self, sdict):
+        params = self.params
+        config_output = ""
+        config_output += self.title + '\n'
+        for param in self.params:
+            config_output += '    ' + str(param).strip() + '\n'
+        return config_output
+
+
+class Defaults():
+	def __init__(self, defaults_array):
+		pass
+
+class Listen():
+    def __init__(self, listen_array):
         pass
+
+class Frontend():
+	def __init__(self, fronted_array):
+		pass
+
+class Backend():
+	def __init__(self, backend_array):
+		pass
