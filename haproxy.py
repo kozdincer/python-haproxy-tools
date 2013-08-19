@@ -163,6 +163,36 @@ class Defaults():
 			    array.append(param['params'])
 		return array
 	
+	def getDefaultsAll(self, option):
+		defaults1 = []
+		defaults2 = []
+
+		option = option.strip()
+
+		for param in self.array:
+			if option == param['name']:
+				defaults1.append(param['name'])
+				defaults2.append(param['params'])
+		return defaults1 + defaults2
+
+	def addDefaults(self, defaults_name, *defaults_param):
+		dictd = {'name': defaults_name, 'params': defaults_param}
+		self.array.append(dictd)
+		return True
+
+	def remDefaults(self, defaults_name, *defaults_param):
+		dictd = {'name': defaults_name, 'params': defaults_param}
+		self.array.remove(dictd)
+		return True
+
+	def getConfigDefaults(self):
+		array = self.array
+		config_output = ""
+		config_output += self.title + '\n'
+		for param in self.array:
+			config_output += '    ' + str(param).strip() + '\n'
+		return config_output
+
 class Listen():
     def __init__(self, listen_array):
         pass
