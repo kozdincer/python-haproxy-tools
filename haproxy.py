@@ -25,7 +25,7 @@ class HAProxyConfig():
     def __init__(self, config_path):
         self.config_path = config_path
         self.config = self.getConfig(self.config_path)
-		
+
         self.globalh = Global(self.getGlobal())
         self.defaults = Defaults(self.getDefaults())
         self.listen = Listen(self.getListen())
@@ -81,6 +81,10 @@ class HAProxyConfig():
         config_file.close()
         return config
 
+class Option():
+	def __init__(self, param_name, params):
+		self.param_name = param_name
+		self.params = params
 
 class Global():
     def __init__(self, config_array):
@@ -123,7 +127,14 @@ class Global():
         sdict = {'name': param_name, 'params': params}
         self.params.append(sdict)
         return True
-    
+	
+    def setParam(self, param_name, *params):
+		param_name = param_name.strip()
+		for param in self.params:
+			if param['name'] == param_name:
+				pt = params
+				param['params'] = pt
+
     def remParam(self, param_name, *params):
         sdict = {'name': param_name, 'params': params}
         self.params.remove(sdict)
