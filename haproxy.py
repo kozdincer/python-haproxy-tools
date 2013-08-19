@@ -115,8 +115,8 @@ class Global():
 
         for param in self.params:
             if opt == param['name']:
-                params1.append(param['params'])
-                params2.append(param['name'])
+                params1.append(param['name'])
+                params2.append(param['params'])
         return params1 + params2
 	
     def addParam(self, param_name, *params):
@@ -137,11 +137,32 @@ class Global():
             config_output += '    ' + str(param).strip() + '\n'
         return config_output
 
-
 class Defaults():
 	def __init__(self, defaults_array):
-		pass
+		self.defaults_array = defaults_array
+		self.title = 'defaults'
+		self.array = []
+		for param in defaults_array:
+			defaults_name = self.getDefaultsName(param).strip()
+			array = self.getDefaultsParam(param)
+			dictd = {'name': defaults_name, 'params': array}
+			self.array.append(dictd)
 
+	def getDefaultsName(self, param):
+		return param.split()[0]
+
+	def getDefaultsParam(self, param):
+		return tuple(param.split()[1:])
+    
+	def getDefaults(self, name):
+		array = []
+		name = name.strip()
+
+		for param in self.array:
+			if name == param['name']:
+			    array.append(param['params'])
+		return array
+	
 class Listen():
     def __init__(self, listen_array):
         pass
