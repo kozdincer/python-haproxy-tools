@@ -195,7 +195,62 @@ class Defaults():
 
 class Listen():
     def __init__(self, listen_array):
-        pass
+		self.listen_array = listen_array
+		self.title = 'listen'
+		self.listen = []
+		
+		for param in listen_array:
+			listen_name = self.getListenName(param).strip()
+			listen_param = self.getListenParam(param)
+			dictlisten = {'name': listen_name, 'params': listen_param}
+			self.listen.append(dictlisten)
+    def getListen(self, name):
+		listen = []
+		name = name.strip()
+
+		for param in self.listen:
+			if name == param['name']:
+				listen.append(param['params'])
+		return listen
+
+    def getListenName(self, param):
+        return param.split()[0]
+
+    def getListenParam(self, param):
+		return tuple(param.split()[1:])
+	
+    def getListenAll(self, option):
+
+		listen1 = []
+		listen2 = []
+		option = option.strip()
+
+		for param in self.listen:
+			if option == param['name']:
+			    listen1.append(param['name'])
+			    listen2.append(param['params'])
+		return listen1 + listen2
+
+    def addListen(self, listen_name, *listen_param):
+		
+		dictl = {'name': listen_name, 'params': listen_param}
+		self.listen.append(dictl)
+		return True
+	
+    def remListen(self, listen_name, *listen_param):
+		
+        dictl = {'name': listen_name, 'params': listen_param}
+        self.listen.remove(dictl)
+        return True
+    
+    def getConfigListen(self):
+        listen = self.listen
+        config_output = ''
+        config_output += self.title + '\n'
+		
+        for param in self.listen:
+            config_output += '    ' + str(param).strip() + '\n'
+        return config_output
 
 class Frontend():
 	def __init__(self, fronted_array):
