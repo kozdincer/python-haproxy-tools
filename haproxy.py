@@ -127,6 +127,16 @@ class Global():
             config_output += '    ' + str(param).strip() + '\n'
         return config_output
 
+    def addOption(self, option):
+        self.options.append(option)
+        return True
+
+    def delOption(self, option):
+        for opt in self.options:
+            if opt.name == option.name:
+                self.options.remove(opt)
+        return True
+
 class Defaults():
 	def __init__(self, defaults_array):
 		self.defaults_array = defaults_array
