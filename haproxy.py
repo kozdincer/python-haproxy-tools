@@ -119,7 +119,7 @@ class Global():
     def getParams(self, row):
         return tuple(row.split()[1:])
 
-    def getConfigGlobal(self):
+    def getConfig(self):
         params = self.params
         config_output = ""
         config_output += self.title + '\n'
