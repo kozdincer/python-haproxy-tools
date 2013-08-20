@@ -31,35 +31,35 @@ class HAProxyConfig():
         self.listen = Listen(self.getListen())
         self.frontend = Frontend(self.getFrontend())
         self.backend = Backend(self.getBackend())
-	
+
     def getSection(self, section):
-        config_array = [] 
+        config_array = []
         section = section.strip()
         start_flag = False
 
         f = open(self.config_path)
         lines = f.readlines()
         f.close()
-        
+
         for line in lines:
             line = line.strip()
             if line == '':
                 continue
-            
+
             sline = line.split()[0]
-            
+
             if sline == section:
                 start_flag = True
                 continue
-            
+
             if sline in SECTIONS:
                 start_flag = False
-            
+
             if start_flag:
                 config_array.append(line)
-        
+
         return config_array
-	
+
     def getGlobal(self):
         return self.getSection('global')
 
@@ -81,25 +81,30 @@ class HAProxyConfig():
         config_file.close()
         return config
 
+
 class Option():
-	def __init__(self, param_name, params):
-		self.param_name = param_name
-		self.params = params
+    def __init__(self, param_name, *params):
+        self.param_name = param_name
+        self.params = params
+        print params
+
+    def getParamName(self):
+        return self.param_name
 
 class Global():
     def __init__(self, config_array):
         self.title = 'global'
-        self.config_array = config_array	
-        self.params = [] 
+        self.config_array = config_array
+        self.params = []
         for param in config_array:
             param_name = self.getOptName(param).strip()
             params = self.getOpts(param)
             pdict = {'name' : param_name, 'params' : params }
             self.params.append(pdict)
-			
+
     def getOptName(self, param):
         return param.split()[0]
-	
+
     def getOpts(self, param):
         return tuple(param.split()[1:])
 
@@ -110,8 +115,8 @@ class Global():
         for param in self.params:
             if name == param['name']:
                 params.append(param['params'])
-        return params 
-		
+        return params
+
     def getParamAll(self, opt):
         params1 = []
         params2 = []
@@ -122,12 +127,12 @@ class Global():
                 params1.append(param['name'])
                 params2.append(param['params'])
         return params1 + params2
-	
+
     def addParam(self, param_name, *params):
         sdict = {'name': param_name, 'params': params}
         self.params.append(sdict)
         return True
-	
+
     def setParam(self, param_name, *params):
 		param_name = param_name.strip()
 		for param in self.params:
@@ -164,7 +169,7 @@ class Defaults():
 
 	def getDefaultsParam(self, param):
 		return tuple(param.split()[1:])
-    
+
 	def getDefaults(self, name):
 		array = []
 		name = name.strip()
@@ -173,7 +178,7 @@ class Defaults():
 			if name == param['name']:
 			    array.append(param['params'])
 		return array
-	
+
 	def getDefaultsAll(self, option):
 		defaults1 = []
 		defaults2 = []
@@ -209,7 +214,7 @@ class Listen():
 		self.listen_array = listen_array
 		self.title = 'listen'
 		self.listen = []
-		
+
 		for param in listen_array:
 			listen_name = self.getListenName(param).strip()
 			listen_param = self.getListenParam(param)
@@ -229,7 +234,7 @@ class Listen():
 
     def getListenParam(self, param):
 		return tuple(param.split()[1:])
-	
+
     def getListenAll(self, option):
 
 		listen1 = []
@@ -243,22 +248,22 @@ class Listen():
 		return listen1 + listen2
 
     def addListen(self, listen_name, *listen_param):
-		
+
 		dictl = {'name': listen_name, 'params': listen_param}
 		self.listen.append(dictl)
 		return True
-	
+
     def remListen(self, listen_name, *listen_param):
-		
+
         dictl = {'name': listen_name, 'params': listen_param}
         self.listen.remove(dictl)
         return True
-    
+
     def getConfigListen(self):
         listen = self.listen
         config_output = ''
         config_output += self.title + '\n'
-		
+
         for param in self.listen:
             config_output += '    ' + str(param).strip() + '\n'
         return config_output
