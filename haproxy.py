@@ -120,10 +120,10 @@ class Global():
         return tuple(row.split()[1:])
 
     def getConfig(self):
-        params = self.params
+        options = self.options
         config_output = ""
         config_output += self.title + '\n'
-        for param in self.params:
+        for param in self.options:
             config_output += '    ' + str(param).strip() + '\n'
         return config_output
 

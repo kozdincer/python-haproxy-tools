@@ -30,16 +30,18 @@ GLOBAL_PARAMS = ['ca-base', 'chroot','crt-base', 'daemon', 'gid',
 'tune.sndbuf.server', 'tune.ssl.cachesize', 'tune.ssl.lifetime', 'tune.ssl.maxrecord',
 'tune.zlib.memlevel', 'tune.zlib.windowsize', 'debug', 'quiet']
 
+
 def isValid(config, section_name):
+    string = ''
     cg = """
 global
     daemon
     maxconn 256
     """
     if section_name == 'global':
-        print config
+        string += config
     else:
-        print cg
+        string += cg
 
     cd = """
 defaults
@@ -49,9 +51,9 @@ defaults
     timeout server 50000ms
 """
     if section_name == 'defaults':
-        print config
+        string += config
     else:
-        print cd
+        string += cd
 
     cf = """
 frontend http-in
@@ -59,18 +61,18 @@ frontend http-in
     default_backend servers
 """
     if section_name == 'frontend':
-        print config
+        string += config
     else:
-        print cf
+        string += cf
 
     cb = """
 backend servers
     server server1 127.0.0.1:8000 maxconn 32
 """
     if section_name == 'backend':
-        print config
+        string += config
     else:
-        print cb
+        string += cb
 
     cl = """
 listen http-in2
@@ -78,8 +80,7 @@ listen http-in2
     server server1 127.0.0.1:8000 maxconn 32
 """
     if section_name == 'listen':
-        print config
+        string += config
     else:
-        print cl
-
-isValid('dsa', 'global')
+        string += cl
+    return string
