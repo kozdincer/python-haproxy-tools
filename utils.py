@@ -19,9 +19,9 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 """
 
 SECTIONS = ['global','defaults', 'listen', 'frontend', 'backend']
-GLOBAL_PARAMS = ['ca-base', 'chroot','crt-base', 'daemon', 'gid', 
-'group', 'log', 'log-send-hostname', 'nbproc', 'pidfile', 'uid', 
-'ulimit-n', 'user', 'stats', 'node', 'description', 'unix-bind', 
+GLOBAL_PARAMS = ['ca-base', 'chroot','crt-base', 'daemon', 'gid',
+'group', 'log', 'log-send-hostname', 'nbproc', 'pidfile', 'uid',
+'ulimit-n', 'user', 'stats', 'node', 'description', 'unix-bind',
 'maxconn', 'maxconnrate', 'maxcomprate', 'maxcompcpuusage', 'maxpipes',
 'maxsslconn', 'noepoll', 'nokqueue', 'nopol', 'nosplice', 'spread-checks',
 'tune.bufsize', 'tune.chksize', 'tune.comp.maxlevel', 'tune.http.cookielen',
@@ -29,3 +29,57 @@ GLOBAL_PARAMS = ['ca-base', 'chroot','crt-base', 'daemon', 'gid',
 'tune.pipesize', 'tune.rcvbuf.client', 'tune.rcvbuf.server', 'tune.sndbuf.client',
 'tune.sndbuf.server', 'tune.ssl.cachesize', 'tune.ssl.lifetime', 'tune.ssl.maxrecord',
 'tune.zlib.memlevel', 'tune.zlib.windowsize', 'debug', 'quiet']
+
+def isValid(config, section_name):
+    cg = """
+global
+    daemon
+    maxconn 256
+    """
+    if section_name == 'global':
+        print config
+    else:
+        print cg
+
+    cd = """
+defaults
+    mode http
+    timeout connect 5000ms
+    timeout client 50000ms
+    timeout server 50000ms
+"""
+    if section_name == 'defaults':
+        print config
+    else:
+        print cd
+
+    cf = """
+frontend http-in
+    bind *:80
+    default_backend servers
+"""
+    if section_name == 'frontend':
+        print config
+    else:
+        print cf
+
+    cb = """
+backend servers
+    server server1 127.0.0.1:8000 maxconn 32
+"""
+    if section_name == 'backend':
+        print config
+    else:
+        print cb
+
+    cl = """
+listen http-in2
+    bind *:80
+    server server1 127.0.0.1:8000 maxconn 32
+"""
+    if section_name == 'listen':
+        print config
+    else:
+        print cl
+
+isValid('dsa', 'global')

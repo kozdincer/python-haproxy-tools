@@ -142,6 +142,7 @@ class Global():
                 opt.params = option.params
         return self.options
 
+
 class Defaults():
 	def __init__(self, defaults_array):
 		self.defaults_array = defaults_array
