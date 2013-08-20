@@ -83,67 +83,41 @@ class HAProxyConfig():
 
 
 class Option():
-    def __init__(self, param_name, *params):
-        self.param_name = param_name
+    def __init__(self, param_name, params):
+        self.name = param_name
         self.params = params
-        print params
+
+    def __str__(self):
+        return self.__repr__()
+
+    def __repr__(self):
+        return str(self.name + " " + " ".join(self.params))
+
+    def getRow(self):
+        return self.__repr__()
 
     def getParamName(self):
-        return self.param_name
+        return self.name
+
+    def getParams(self):
+        return self.params
 
 class Global():
     def __init__(self, config_array):
         self.title = 'global'
         self.config_array = config_array
-        self.params = []
-        for param in config_array:
-            param_name = self.getOptName(param).strip()
-            params = self.getOpts(param)
-            pdict = {'name' : param_name, 'params' : params }
-            self.params.append(pdict)
+        self.options = []
+        for row in config_array:
+            param_name = self.getParamName(row).strip()
+            params = self.getParams(row)
+            option = Option(param_name, params)
+            self.options.append(option)
 
-    def getOptName(self, param):
-        return param.split()[0]
+    def getParamName(self, row):
+        return row.split()[0]
 
-    def getOpts(self, param):
-        return tuple(param.split()[1:])
-
-    def getParam(self, name):
-        params = []
-        name = name.strip()
-
-        for param in self.params:
-            if name == param['name']:
-                params.append(param['params'])
-        return params
-
-    def getParamAll(self, opt):
-        params1 = []
-        params2 = []
-        opt = opt.strip()
-
-        for param in self.params:
-            if opt == param['name']:
-                params1.append(param['name'])
-                params2.append(param['params'])
-        return params1 + params2
-
-    def addParam(self, param_name, *params):
-        sdict = {'name': param_name, 'params': params}
-        self.params.append(sdict)
-        return True
-
-    def setParam(self, param_name, *params):
-		param_name = param_name.strip()
-		for param in self.params:
-			if param['name'] == param_name:
-				pt = params
-				param['params'] = pt
-
-    def remParam(self, param_name, *params):
-        sdict = {'name': param_name, 'params': params}
-        self.params.remove(sdict)
-        return True
+    def getParams(self, row):
+        return tuple(row.split()[1:])
 
     def getConfigGlobal(self):
         params = self.params
