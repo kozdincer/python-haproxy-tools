@@ -133,9 +133,14 @@ class Global():
 
     def delOption(self, option):
         for opt in self.options:
-            if opt.name == option.name:
+            if opt == option.name:
                 self.options.remove(opt)
         return True
+    def setOption(self, option):
+        for opt in self.options:
+            if opt.name == option.name:
+                opt.params = option.params
+        return self.options
 
 class Defaults():
 	def __init__(self, defaults_array):
