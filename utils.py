@@ -30,7 +30,7 @@ GLOBAL_PARAMS = ['ca-base', 'chroot','crt-base', 'daemon', 'gid',
 'tune.sndbuf.server', 'tune.ssl.cachesize', 'tune.ssl.lifetime', 'tune.ssl.maxrecord',
 'tune.zlib.memlevel', 'tune.zlib.windowsize', 'debug', 'quiet']
 
-
+import subprocess
 def isValid(config, section_name):
     string = ''
     cg = """
@@ -83,4 +83,13 @@ listen http-in2
         string += config
     else:
         string += cl
-    return string
+    f = open('/tmp/deneme.conf', 'w')
+    a = f.write(string)
+    f.close()
+
+    cmd = 'haproxy -c -f /tmp/deneme.conf'
+    ps = subprocess.Popen(cmd, shell = True, stdout = subprocess.PIPE, stderr = subprocess.STDOUT)
+    output = ps.communicate()
+    print output
+
+
