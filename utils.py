@@ -90,7 +90,11 @@ listen http-in2
     cmd = 'haproxy -c -f /tmp/deneme.conf'
     ps = subprocess.Popen(cmd, shell = True, stdout = subprocess.PIPE, stderr = subprocess.STDOUT)
     stdout, stderr = ps.communicate()
-    print ps.returncode
-    return stdout
+    if ps.returncode == 1:
+        print False
+        return stdout
+    else:
+        print True
+        return stdout
 
 
