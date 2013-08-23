@@ -104,6 +104,7 @@ class Section():
     def __init__(self, config_array):
         self.config_array = config_array
         self.options = []
+        self.title = ''
         for row in config_array:
             param_name = self.getParamName(row).strip()
             params = self.getParams(row)
@@ -118,7 +119,7 @@ class Section():
 
     def getConfig(self):
         options = self.options
-        config_output = ""
+        config_output = "%s\n" %self.title
         for param in self.options:
             config_output += '    ' + str(param).strip() + '\n'
         return config_output
