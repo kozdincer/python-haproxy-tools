@@ -105,7 +105,7 @@ class Section():
         self.config_array = config_array
         self.options = []
         for row in config_array:
-            param_name = self.getParamName(row).split()
+            param_name = self.getParamName(row).strip()
             params = self.getParams(row)
             option = Option(param_name, params)
             self.options.append(option)
@@ -144,7 +144,7 @@ class Global(Section):
         self.title = 'global'
 
     def deneme(self):
-        print self.title
+        return self.title
 
 class Defaults(Section):
     def __init__(self, config_array):
