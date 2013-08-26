@@ -38,7 +38,6 @@ class HAProxyConfig():
         self.backend = Backend(self.getBackend())
 
     def getSection(self, section, name=None):
-        print name
         config_array = []
         section = section.strip()
         start_flag = False
@@ -51,12 +50,18 @@ class HAProxyConfig():
             line = line.strip()
             if line == '':
                 continue
-
             sline = line.split()[0]
 
             if sline == section:
-                start_flag = True
-                continue
+                if name == None:
+                    start_flag = True
+                    continue
+                else:
+                    if name in line:
+                        start_flag = True
+                        continue
+                    else:
+                        start_flag = False
 
             if sline in SECTIONS:
                 start_flag = False
