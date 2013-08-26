@@ -34,8 +34,11 @@ class HAProxyConfig():
             fe = Frontend(self.getFrontend(name), name)
             self.frontends.append(fe)
 
-
-        self.backend = Backend(self.getBackend())
+        #Set Backend.
+        self.backends = []
+        for name in self.getBackendNames():
+            be = Backend(self.getBackend(name), name)
+            self.backends.append(be)
 
     def getSection(self, section, name=None):
         config_array = []
@@ -83,8 +86,9 @@ class HAProxyConfig():
     def getFrontend(self, name):
         return self.getSection('frontend', name=name)
 
-    def getBackend(self):
-        return self.getSection('backend')
+    def getBackend(self, name):
+        return self.getSection('backend', name=name)
+
     def getConfig(self, config_path):
         config_file = open(config_path)
         config = config_file.read()
@@ -100,6 +104,16 @@ class HAProxyConfig():
                     name = row.split()[1]
                     f_names.append(name)
             return f_names
+
+    def getBackendNames(self):
+        b_names = []
+        rows = self.config.split('\n')
+        for row in rows:
+            row = row.strip()
+            if row.startswith('backend'):
+                name = row.split()[1]
+                b_names.append(name)
+        return b_names
 
 class Option():
     def __init__(self, param_name, params):
@@ -186,8 +200,9 @@ class Frontend(Section):
         pass
 
 class Backend(Section):
-    def __init__(self, config_array):
+    def __init__(self, config_array, name):
         Section.__init__(self, config_array)
         self.title = 'backend'
+        self.name = name
         pass
 
