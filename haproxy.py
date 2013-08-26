@@ -25,8 +25,18 @@ class HAProxyConfig():
         self.config_path = config_path
         self.config = self.getConfig(self.config_path)
         self.globalh = Global(self.getGlobal())
-        self.defaults = Defaults(self.getDefaults())
-        self.listen = Listen(self.getListen())
+
+        # Set Defaults.
+        self.defaults = []
+        for name in self.getDefaultsName():
+            de = Defaults(self.getDefaults(name), name)
+            self.defaults.append(de)
+
+        # Set Listen.
+        self.listen = []
+        for name in self.getListenName():
+            l = Listen(self.getListen(name), name)
+            self.listen.append(l)
 
         # Set Frontends.
         self.frontends = []
@@ -77,11 +87,11 @@ class HAProxyConfig():
     def getGlobal(self):
         return self.getSection('global')
 
-    def getDefaults(self):
-        return self.getSection('defaults')
+    def getDefaults(self, name):
+        return self.getSection('defaults', name=name)
 
-    def getListen(self):
-        return self.getSection('listen')
+    def getListen(self, name):
+        return self.getSection('listen', name=name)
 
     def getFrontend(self, name):
         return self.getSection('frontend', name=name)
@@ -94,6 +104,29 @@ class HAProxyConfig():
         config = config_file.read()
         config_file.close()
         return config
+
+    def getDefaultsName(self):
+        d_name = []
+        rows = self.config.split('\n')
+        for row in rows:
+            row = row.strip()
+            if row.startswith('defaults'):
+                try:
+                    name = row.split()[1]
+                    d_name.append(name)
+                except:
+                    return "Option isn't found"
+        return d_name
+
+    def getListenName(self):
+        l_name = []
+        rows = self.config.split('\n')
+        for row in rows:
+            row = row.strip()
+            if row.startswith('listen'):
+                name = str(row.split()[1:])
+                l_name.append(name)
+        return l_name
 
     def getFrontendNames(self):
             f_names = []
@@ -181,15 +214,17 @@ class Global(Section):
         pass
 
 class Defaults(Section):
-    def __init__(self, config_array):
+    def __init__(self, config_array, name):
         Section.__init__(self, config_array)
         self.title = 'defaults'
+        self.name = name
         pass
 
 class Listen(Section):
-    def __init__(self, config_array):
+    def __init__(self, config_array, name):
         Section.__init__(self, config_array)
         self.title = 'listen'
+        self.name = name
         pass
 
 class Frontend(Section):
