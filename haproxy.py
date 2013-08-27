@@ -26,7 +26,12 @@ class HAProxyConfig():
         self.config = self.getConfig(self.config_path)
         self.globalh = Global(self.getGlobal())
         self.defaults = Defaults(self.getDefaults())
-        self.listen = Listen(self.getListen())
+
+        #Set Listen.
+        self.listens = []
+        for name in self.getListenNames():
+            le = Listen(self.getListen(name), name)
+            self.listens.append(le)
 
 
         # Set Frontends.
@@ -85,8 +90,8 @@ class HAProxyConfig():
     def getDefaults(self):
         return self.getSection('defaults')
 
-    def getListen(self):
-        return self.getSection('listen')
+    def getListen(self, name):
+        return self.getSection('listen', name=name)
 
     def getFrontend(self, name):
         return self.getSection('frontend', name=name)
@@ -99,6 +104,16 @@ class HAProxyConfig():
         config = config_file.read()
         config_file.close()
         return config
+
+    def getListenNames(self):
+        l_names = []
+        rows = self.config.split('\n')
+        for row in rows:
+            row = row.strip()
+            if row.startswith('listen'):
+                name = row
+                l_names.append(name)
+        return l_names
 
     def getFrontendNames(self):
             f_names = []
@@ -192,9 +207,10 @@ class Defaults(Section):
         pass
 
 class Listen(Section):
-    def __init__(self, config_array):
+    def __init__(self, config_array, name):
         Section.__init__(self, config_array)
         self.title = 'listen'
+        self.name = name
         pass
 
 class Frontend(Section):
