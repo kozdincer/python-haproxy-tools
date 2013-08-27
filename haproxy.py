@@ -43,9 +43,9 @@ class HAProxyConfig():
 
     def getSection(self, section, name=None):
         config_array = []
+        self.listen_row = []
         section = section.strip()
         start_flag = False
-
         f = open(self.config_path)
         lines = f.readlines()
         f.close()
@@ -54,17 +54,21 @@ class HAProxyConfig():
             line = line.strip()
             if line == '':
                 continue
-
             sline = line.split()[0]
 
             if sline == section:
+                if section == 'listen':
+                    self.listen_row.append(line)
+
                 if name == None:
                     start_flag = True
                     continue
+
                 else:
                     if name in line:
                         start_flag = True
                         continue
+
                     else:
                         start_flag = False
 
