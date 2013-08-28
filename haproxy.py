@@ -30,25 +30,23 @@ class HAProxyConfig():
         #Set Listen.
         self.listens = []
         for name in self.getListenNames():
-            le = Listen(self.getListen(name), name)
-            self.listens.append(le)
-
+            l = Listen(self.getListen(name), name)
+            self.listens.append(l)
 
         # Set Frontends.
         self.frontends = []
         for name in self.getFrontendNames():
-            fe = Frontend(self.getFrontend(name), name)
-            self.frontends.append(fe)
+            f = Frontend(self.getFrontend(name), name)
+            self.frontends.append(f)
 
         #Set Backend.
         self.backends = []
         for name in self.getBackendNames():
-            be = Backend(self.getBackend(name), name)
-            self.backends.append(be)
+            b = Backend(self.getBackend(name), name)
+            self.backends.append(b)
 
     def getSection(self, section, name=None):
         config_array = []
-        self.listen_row = []
         section = section.strip()
         start_flag = False
         f = open(self.config_path)
@@ -62,9 +60,6 @@ class HAProxyConfig():
             sline = line.split()[0]
 
             if sline == section:
-                if section == 'listen':
-                    self.listen_row.append(line)
-
                 if name == None:
                     start_flag = True
                     continue
@@ -83,7 +78,6 @@ class HAProxyConfig():
             if start_flag:
                 config_array.append(line)
         return config_array
-
     def getGlobal(self):
         return self.getSection('global')
 
@@ -111,7 +105,7 @@ class HAProxyConfig():
         for row in rows:
             row = row.strip()
             if row.startswith('listen'):
-                name = row
+                name = row.split()[1]
                 l_names.append(name)
         return l_names
 
@@ -174,7 +168,7 @@ class Section():
 
     def getConfig(self):
         options = self.options
-        config_output = "%s\n" %self.title
+        config_output = "%s" %self.title + " " +"%s\n" %self.name
         for param in self.options:
             config_output += '    ' + str(param).strip() + '\n'
         return config_output
@@ -198,32 +192,26 @@ class Global(Section):
     def __init__(self, config_array):
         Section.__init__(self, config_array)
         self.title = 'global'
-        pass
 
 class Defaults(Section):
     def __init__(self, config_array):
         Section.__init__(self, config_array)
         self.title = 'defaults'
-        pass
 
 class Listen(Section):
     def __init__(self, config_array, name):
         Section.__init__(self, config_array)
         self.title = 'listen'
         self.name = name
-        pass
 
 class Frontend(Section):
     def __init__(self, config_array, name):
         Section.__init__(self, config_array)
         self.title = 'frontend'
         self.name = name
-        pass
 
 class Backend(Section):
     def __init__(self, config_array, name):
         Section.__init__(self, config_array)
         self.title = 'backend'
         self.name = name
-        pass
-
