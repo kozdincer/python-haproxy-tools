@@ -47,6 +47,7 @@ class HAProxyConfig():
 
     def getSection(self, section, name=None):
         config_array = []
+        self.a = ''
         section = section.strip()
         start_flag = False
         f = open(self.config_path)
@@ -57,9 +58,12 @@ class HAProxyConfig():
             line = line.strip()
             if line == '':
                 continue
+
             sline = line.split()[0]
 
             if sline == section:
+                config_array.append(line)
+
                 if name == None:
                     start_flag = True
                     continue
@@ -78,6 +82,7 @@ class HAProxyConfig():
             if start_flag:
                 config_array.append(line)
         return config_array
+
     def getGlobal(self):
         return self.getSection('global')
 
@@ -106,7 +111,7 @@ class HAProxyConfig():
             row = row.strip()
             if row.startswith('listen'):
                 name = row.split()[1]
-                l_names.append(name)
+                l_names.append(name )
         return l_names
 
     def getFrontendNames(self):
@@ -168,9 +173,12 @@ class Section():
 
     def getConfig(self):
         options = self.options
-        config_output = "%s" %self.title + " " +"%s\n" %self.name
+        config_output = ""
         for param in self.options:
-            config_output += '    ' + str(param).strip() + '\n'
+            if param == self.options[0]:
+                config_output += str(param).strip() + '\n'
+            else:
+                config_output += '    ' + str(param).strip() + '\n'
         return config_output
 
     def addOption(self, option):
