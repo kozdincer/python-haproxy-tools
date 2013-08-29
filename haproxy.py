@@ -23,7 +23,7 @@ class HAProxyConfig():
 
     def __init__(self, config_path):
         self.config_path = config_path
-        self.config = self.getConfig()
+        self.config = self.readConfig()
         self.globalh = Global(self.getGlobal())
         self.defaults = Defaults(self.getDefaults())
 
@@ -45,22 +45,19 @@ class HAProxyConfig():
             b = Backend(self.getBackend(name))
             self.backends.append(b)
 
-    def getSection(self, section, name=None):
+    def getSection(self, title, name=None):
         config_array = []
-        section = section.strip()
+        title = title.strip()
         start_flag = False
-        f = open(self.config_path)
-        lines = f.readlines()
-        f.close()
 
-        for line in lines:
+        for line in self.config:
             line = line.strip()
             if line == '':
                 continue
 
             sline = line.split()[0]
 
-            if sline == section:
+            if sline == title:
                 config_array.append(line)
 
                 if name == None:
@@ -97,9 +94,9 @@ class HAProxyConfig():
     def getBackend(self, name):
         return self.getSection('backend', name=name)
 
-    def getConfig(self):
+    def readConfig(self):
         config_file = open(self.config_path)
-        config = config_file.read()
+        config = config_file.readlines()
         config_file.close()
         return config
 
@@ -137,18 +134,12 @@ class HAProxyConfig():
         return self.__repr__()
 
     def __repr__(self):
-        return self.getConfig()
+        return self.readConfig()
 
 class Option():
     def __init__(self, param_name, params):
         self.name = param_name
         self.params = params
-
-    def __str__(self):
-        return self.__repr__()
-
-    def __repr__(self):
-        return str(self.name + " " + " ".join(self.params))
 
     def getRow(self):
         return self.__repr__()
@@ -158,6 +149,13 @@ class Option():
 
     def getParams(self):
         return self.params
+
+    def __str__(self):
+        return self.__repr__()
+
+    def __repr__(self):
+        return str(self.name + " " + " ".join(self.params))
+
 
 class Section():
     def __init__(self, config_array):
@@ -197,13 +195,12 @@ class Section():
         return tuple(row.split()[1:])
 
     def getConfig(self):
-        options = self.options
+        opts = self.options
+        des = self.description
         config_output = ""
-        for param in self.options:
-            if param == self.options[0]:
-                config_output += str(param).strip() + '\n'
-            else:
-                config_output += '    ' + str(param).strip() + '\n'
+        config_output += str(des) + '\n'
+        for opt in opts:
+            config_output += '    ' + str(opt) + '\n'
         return config_output
 
     def addOption(self, option):
@@ -221,11 +218,29 @@ class Section():
                 opt.params = option.params
         return self.options
 
+    def __str__(self):
+        return self.__repr__()
+
+    def __repr__(self):
+        return self.getConfig()
+
 class Description():
     def __init__(self, title, name=None, params=None):
         self.title = title
         self.name = name
         self.params = params
+
+    def __str__(self):
+        return self.__repr__()
+
+    def __repr__(self):
+        out = []
+        out.append(self.title)
+        if self.name:
+            out.append(self.name)
+        if self.params:
+            out + self.params
+        return " ".join(out)
 
 class Global(Section):
     def __init__(self, config_array):
