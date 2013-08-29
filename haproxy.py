@@ -118,7 +118,6 @@ class HAProxyConfig():
 
     def __getSection(self, title):
         config_array = []
-        title_array = ['global', 'defaults']
         title = title.strip()
         start_flag = False
 
@@ -128,18 +127,18 @@ class HAProxyConfig():
             if line == '':
                 continue
 
-            if title in title_array:
+            ltitle = line.split()[0].strip()
+            if ltitle == title:
+                config_array.append(line)
                 start_flag = True
                 continue
 
-            if title in SECTIONS:
+            if ltitle in SECTIONS:
                 start_flag = False
-
-            if title not in title_array:
-                return []
 
             if start_flag:
                 config_array.append(line)
+
         return config_array
 
     def __readConfig(self):
