@@ -23,31 +23,30 @@ class HAProxyConfig():
 
     def __init__(self, config_path):
         self.config_path = config_path
-        self.config = self.getConfig(self.config_path)
+        self.config = self.getConfig()
         self.globalh = Global(self.getGlobal())
         self.defaults = Defaults(self.getDefaults())
 
         #Set Listen.
         self.listens = []
         for name in self.getListenNames():
-            l = Listen(self.getListen(name), name)
+            l = Listen(self.getListen(name))
             self.listens.append(l)
 
         # Set Frontends.
         self.frontends = []
         for name in self.getFrontendNames():
-            f = Frontend(self.getFrontend(name), name)
+            f = Frontend(self.getFrontend(name))
             self.frontends.append(f)
 
         #Set Backend.
         self.backends = []
         for name in self.getBackendNames():
-            b = Backend(self.getBackend(name), name)
+            b = Backend(self.getBackend(name))
             self.backends.append(b)
 
     def getSection(self, section, name=None):
         config_array = []
-        self.a = ''
         section = section.strip()
         start_flag = False
         f = open(self.config_path)
@@ -98,8 +97,8 @@ class HAProxyConfig():
     def getBackend(self, name):
         return self.getSection('backend', name=name)
 
-    def getConfig(self, config_path):
-        config_file = open(config_path)
+    def getConfig(self):
+        config_file = open(self.config_path)
         config = config_file.read()
         config_file.close()
         return config
@@ -134,6 +133,12 @@ class HAProxyConfig():
                 b_names.append(name)
         return b_names
 
+    def __str__(self):
+        return self.__repr__()
+
+    def __repr__(self):
+        return self.getConfig()
+
 class Option():
     def __init__(self, param_name, params):
         self.name = param_name
@@ -158,8 +163,28 @@ class Section():
     def __init__(self, config_array):
         self.config_array = config_array
         self.options = []
-        self.title = ''
+        self.description = None
+
+        is_first_row = True
         for row in config_array:
+            if is_first_row:
+                is_first_row = False
+                items = row.split()
+                title = items[0]
+
+                if len(items) > 1:
+                    name = items[1]
+                else:
+                    name = None
+                if len(items) > 2:
+                    params = items[2:]
+                else:
+                    params = None
+
+                self.description = Description(title, name, params)
+
+                continue
+
             param_name = self.getParamName(row).strip()
             params = self.getParams(row)
             option = Option(param_name, params)
@@ -196,30 +221,28 @@ class Section():
                 opt.params = option.params
         return self.options
 
+class Description():
+    def __init__(self, title, name=None, params=None):
+        self.title = title
+        self.name = name
+        self.params = params
+
 class Global(Section):
     def __init__(self, config_array):
         Section.__init__(self, config_array)
-        self.title = 'global'
 
 class Defaults(Section):
     def __init__(self, config_array):
         Section.__init__(self, config_array)
-        self.title = 'defaults'
 
 class Listen(Section):
-    def __init__(self, config_array, name):
+    def __init__(self, config_array):
         Section.__init__(self, config_array)
-        self.title = 'listen'
-        self.name = name
 
 class Frontend(Section):
-    def __init__(self, config_array, name):
+    def __init__(self, config_array):
         Section.__init__(self, config_array)
-        self.title = 'frontend'
-        self.name = name
 
 class Backend(Section):
-    def __init__(self, config_array, name):
+    def __init__(self, config_array):
         Section.__init__(self, config_array)
-        self.title = 'backend'
-        self.name = name
