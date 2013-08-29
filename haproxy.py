@@ -48,6 +48,9 @@ class HAProxyConfig():
     def getGlobal(self):
         return self.globalh
 
+    def getDefaults(self):
+        return self.defaults
+
     def getFrontend(self, name):
         name = name.strip()
         for fe in self.frontends:
