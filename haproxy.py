@@ -29,19 +29,19 @@ class HAProxyConfig():
 
         #Set Listen.
         self.listens = []
-        for name in self.getListenNames():
+        for name in self.getSectionNames('listen'):
             l = Listen(self.getListen(name))
             self.listens.append(l)
 
         # Set Frontends.
         self.frontends = []
-        for name in self.getFrontendNames():
+        for name in self.getSectionNames('frontend'):
             f = Frontend(self.getFrontend(name))
             self.frontends.append(f)
 
         #Set Backend.
         self.backends = []
-        for name in self.getBackendNames():
+        for name in self.getSectionNames('backend'):
             b = Backend(self.getBackend(name))
             self.backends.append(b)
 
@@ -100,35 +100,14 @@ class HAProxyConfig():
         config_file.close()
         return config
 
-    def getListenNames(self):
+    def getSectionNames(self, title):
         l_names = []
-        rows = self.config.split('\n')
-        for row in rows:
+        for row in self.config:
             row = row.strip()
-            if row.startswith('listen'):
+            if row.startswith(title):
                 name = row.split()[1]
                 l_names.append(name )
         return l_names
-
-    def getFrontendNames(self):
-            f_names = []
-            rows = self.config.split('\n')
-            for row in rows:
-                row = row.strip()
-                if row.startswith('frontend'):
-                    name = row.split()[1]
-                    f_names.append(name)
-            return f_names
-
-    def getBackendNames(self):
-        b_names = []
-        rows = self.config.split('\n')
-        for row in rows:
-            row = row.strip()
-            if row.startswith('backend'):
-                name = row.split()[1]
-                b_names.append(name)
-        return b_names
 
     def __str__(self):
         return self.__repr__()
