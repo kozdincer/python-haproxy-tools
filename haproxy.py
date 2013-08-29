@@ -24,28 +24,28 @@ class HAProxyConfig():
     def __init__(self, config_path):
         self.config_path = config_path
         self.config = self.readConfig()
-        self.globalh = Global(self.getGlobal())
-        self.defaults = Defaults(self.getDefaults())
+        self.globalh = Global(self.__getSection('global'))
+        self.defaults = Defaults(self.__getSection('global'))
 
         #Set Listen.
         self.listens = []
         for name in self.getSectionNames('listen'):
-            l = Listen(self.getListen(name))
+            l = Listen(self.__getSection('listen', name))
             self.listens.append(l)
 
         # Set Frontends.
         self.frontends = []
         for name in self.getSectionNames('frontend'):
-            f = Frontend(self.getFrontend(name))
+            f = Frontend(self.__getSection('frontend', name))
             self.frontends.append(f)
 
         #Set Backend.
         self.backends = []
         for name in self.getSectionNames('backend'):
-            b = Backend(self.getBackend(name))
+            b = Backend(self.__getSection('backend', name))
             self.backends.append(b)
 
-    def getSection(self, title, name=None):
+    def __getSectionWithName(self, title, name):
         config_array = []
         title = title.strip()
         start_flag = False
@@ -62,12 +62,7 @@ class HAProxyConfig():
             if len(line_array)> 1:
                 lname = line_array[1].strip()
             if ltitle == title.strip():
-                if name:
-                    if name == lname:
-                        config_array.append(line)
-                        start_flag = True
-                        continue
-                else:
+                if name == lname:
                     config_array.append(line)
                     start_flag = True
                     continue
@@ -79,20 +74,12 @@ class HAProxyConfig():
                 config_array.append(line)
         return config_array
 
-    def getGlobal(self):
-        return self.getSection('global')
+    def __getSection(self, title):
 
-    def getDefaults(self):
-        return self.getSection('defaults')
 
-    def getListen(self, name):
-        return self.getSection('listen', name=name)
-
-    def getFrontend(self, name):
-        return self.getSection('frontend', name=name)
-
-    def getBackend(self, name):
-        return self.getSection('backend', name=name)
+    def getFrontend(self, name=None):
+        ca = self.__getSectionWithName('frontend', name)
+        return ca
 
     def readConfig(self):
         config_file = open(self.config_path)
@@ -143,7 +130,7 @@ class Section():
         self.description = None
 
         is_first_row = True
-        for row in config_array:
+        for row in self.config_array:
             if is_first_row:
                 is_first_row = False
                 items = row.split()
@@ -223,20 +210,26 @@ class Description():
 
 class Global(Section):
     def __init__(self, config_array):
+        print '### global'
         Section.__init__(self, config_array)
 
 class Defaults(Section):
     def __init__(self, config_array):
+        print '### defaults'
         Section.__init__(self, config_array)
 
 class Listen(Section):
     def __init__(self, config_array):
+        print '### listen'
         Section.__init__(self, config_array)
 
 class Frontend(Section):
     def __init__(self, config_array):
+        print '### frontend'
         Section.__init__(self, config_array)
 
 class Backend(Section):
     def __init__(self, config_array):
+        print '### backend'
         Section.__init__(self, config_array)
+
