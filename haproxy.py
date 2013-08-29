@@ -51,8 +51,32 @@ class HAProxyConfig():
         start_flag = False
 
         for line in self.config:
-            print line
+            line = line.strip()
 
+            if line == '':
+                continue
+
+            line_array = line.split()
+            ltitle = line_array[0].strip()
+
+            if len(line_array)> 1:
+                lname = line_array[1].strip()
+            if ltitle == title.strip():
+                if name:
+                    if name == lname:
+                        config_array.append(line)
+                        start_flag = True
+                        continue
+                else:
+                    config_array.append(line)
+                    start_flag = True
+                    continue
+
+            if ltitle in SECTIONS:
+                start_flag = False
+
+            if start_flag:
+                config_array.append(line)
         return config_array
 
     def getGlobal(self):
