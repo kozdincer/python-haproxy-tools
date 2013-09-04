@@ -120,6 +120,21 @@ class HAProxyConfig():
         backend = Backend(ca)
         self.backends.append(backend)
 
+    def delBackend(self, name):
+        for be in self.backends:
+            if be.description.name == name:
+                self.backends.remove(be)
+
+    def delFrontend(self, name):
+        for fe in self.frontends:
+            if fe.description.name == name:
+                self.frontends.remove(fe)
+
+    def delListen(self, name):
+        for l in self.listens:
+            if l.description.name == name:
+                self.listens.remove(l)
+
     def getFrontends(self):
         return self.frontends
 
