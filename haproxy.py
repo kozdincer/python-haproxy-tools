@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>
 
 """
+# -*- coding: utf-8 -*-
 from utils import *
 
 class HAProxyConfig():
@@ -48,6 +49,7 @@ class HAProxyConfig():
     def getGlobal(self):
         return self.globalh
 
+
     def getDefaults(self):
         return self.defaults
 
@@ -68,6 +70,55 @@ class HAProxyConfig():
         for l in self.listens:
             if l.description.name == name:
                 return l
+
+    def addListen(self, name, ip=None, port=None, mode=None):
+        ca = []
+        ca.append('listen %s' %name)
+        coption = ""
+        if ip:
+            cip = ip
+        else:
+            cip = "*"
+        if port:
+            cport = port
+        else:
+            cport = "80"
+        coption = "bind %s:%s" %(cip,cport)
+        ca.append(coption)
+        if mode:
+            ca.append('mode %s' %mode)
+
+        listen = Listen(ca)
+        self.listens.append(listen)
+
+    def addFrontend(self, name, ip=None, port=None, mode=None):
+        ca = []
+        ca.append('frontend %s' %name)
+        coption = ""
+        if ip:
+            cip = ip
+        else:
+            cip = ip
+        if port:
+            cport = port
+        else:
+            cport = "80"
+        coption = "bind %s:%s" %(cip, cport)
+        ca.append(coption)
+        if mode:
+            ca.append('mode:%s' %mode)
+
+        frontend = Frontend(ca)
+        self.frontends.append(frontend)
+
+    def addBackend(self, name, balance):
+        ca = []
+        ca.append('backend %s' %name)
+        coption = ""
+        coption = "balance %s" %balance
+        ca.append(coption)
+        backend = Backend(ca)
+        self.backends.append(backend)
 
     def getFrontends(self):
         return self.frontends
@@ -283,5 +334,4 @@ class Backend(Section):
     def __init__(self, config_array):
         Section.__init__(self, config_array)
         self.name = self.description.name
-
 
