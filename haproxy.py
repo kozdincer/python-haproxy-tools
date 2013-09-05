@@ -25,8 +25,20 @@ class HAProxyConfig():
     def __init__(self, config_path):
         self.config_path = config_path
         self.config = self.__readConfig()
-        self.globalh = Global(self.__getSection('global'))
-        self.defaults = Defaults(self.__getSection('defaults'))
+
+        # Set globals section.
+        gs = self.__getSection('global')
+        if gs:
+            self.globalh = Global(gs)
+        else:
+            self.globalh = None
+
+        # Set defaults section.
+        ds = self.__getSection('defaults')
+        if ds:
+            self.defaults = Defaults(ds)
+        else:
+            self.defaults = None
 
         #Set Listen.
         self.listens = []
@@ -47,9 +59,11 @@ class HAProxyConfig():
             self.backends.append(b)
 
     def getConfig(self):
-        out = ""
-        out += self.globalh.getConfig()
-        out += self.defaults.getConfig()
+        out = "# This file created by python-haproxy-tools\n"
+        if self.globalh:
+            out += self.globalh.getConfig()
+        if self.defaults:
+            out += self.defaults.getConfig()
         for l in self.listens:
             out += l.getConfig()
         for f in self.frontends:
@@ -233,8 +247,10 @@ class HAProxyConfig():
 
             if start_flag:
                 config_array.append(line)
-
-        return config_array
+        if config_array:
+            return config_array
+        else:
+            return None
 
     def __readConfig(self):
         config_file = open(self.config_path)
@@ -335,11 +351,6 @@ class Section():
                 opt.params = option.params
         return self.options
 
-    def __str__(self):
-        return self.__repr__()
-
-    def __repr__(self):
-        return self.getConfig()
 
 class Description():
     def __init__(self, title, name=None):
