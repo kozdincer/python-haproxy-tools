@@ -31,3 +31,5 @@ GLOBAL_PARAMS = ['ca-base', 'chroot','crt-base', 'daemon', 'gid',
 'tune.zlib.memlevel', 'tune.zlib.windowsize', 'debug', 'quiet']
 
 import subprocess
+def isValid(config):
+    print config
