@@ -278,11 +278,8 @@ class Option():
     def getParams(self):
         return self.params
 
-    def __str__(self):
-        return self.__repr__()
-
-    def __repr__(self):
-        return self.name + " " + "".join(self.params)
+    def getConfig(self):
+        return "%s %s" %(self.name, " ".join(self.params))
 
 class Section():
     def __init__(self, config_array):
@@ -332,7 +329,7 @@ class Section():
         config_output = ""
         config_output += str(des) + '\n'
         for opt in opts:
-            config_output += '    ' + str(opt) + '\n'
+            config_output += '    ' + opt.getConfig() + '\n'
         config_output += '\n'
         return config_output
 
