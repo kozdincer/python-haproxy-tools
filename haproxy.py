@@ -301,7 +301,7 @@ class Section():
 
                 if params:
                     for p in params:
-                        o = Option('bind', p)
+                        o = Option('bind', tuple([p]))
                         self.options.append(o)
 
                 continue
