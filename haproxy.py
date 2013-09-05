@@ -49,7 +49,6 @@ class HAProxyConfig():
     def getGlobal(self):
         return self.globalh
 
-
     def getDefaults(self):
         return self.defaults
 
