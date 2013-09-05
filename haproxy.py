@@ -71,6 +71,24 @@ class HAProxyConfig():
             if l.description.name == name:
                 return l
 
+    def getFnames(self):
+        fa = []
+        for f in self.frontends:
+            fa.append(f.name)
+        return fa
+
+    def getLnames(self):
+        la = []
+        for l in self.listens:
+            la.append(l.name)
+        return la
+
+    def getBnames(self):
+        ba = []
+        for b in self.backends:
+            ba.append(b.name)
+        return ba
+
     def addListen(self, name, ip=None, port=None, mode=None):
         ca = []
         ca.append('listen %s' %name)
@@ -238,7 +256,6 @@ class Option():
 
     def __repr__(self):
         return self.name + " " + "".join(self.params)
-
 
 class Section():
     def __init__(self, config_array):
