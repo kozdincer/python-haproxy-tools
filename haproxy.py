@@ -317,6 +317,7 @@ class Section():
         config_output += str(des) + '\n'
         for opt in opts:
             config_output += '    ' + str(opt) + '\n'
+        config_output += '\n'
         return config_output
 
     def addOption(self, option):
