@@ -321,7 +321,7 @@ class Section():
         opts = self.options
         des = self.description
         config_output = ""
-        config_output += str(des) + '\n'
+        config_output += des.getConfig() + '\n'
         for opt in opts:
             config_output += '    ' + opt.getConfig() + '\n'
         config_output += '\n'
@@ -348,10 +348,7 @@ class Description():
         self.title = title
         self.name = name
 
-    def __str__(self):
-        return self.__repr__()
-
-    def __repr__(self):
+    def getConfig(self):
         out = []
         out.append(self.title)
         if self.name:
