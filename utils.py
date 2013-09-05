@@ -32,4 +32,17 @@ GLOBAL_PARAMS = ['ca-base', 'chroot','crt-base', 'daemon', 'gid',
 
 import subprocess
 def isValid(config):
-    print config
+    tmp_file = '/tmp/haproxy.cfg.tmp'
+    f = open(tmp_file, 'w')
+    f.write(config)
+    f.close()
+    p = subprocess.Popen(["/usr/sbin/haproxy", "-c", "-f", tmp_file], stdout=subprocess.PIPE)
+    out, err = p.communicate()
+    output = out.strip()
+    return_code = p.returncode
+    if return_code == 0:
+        print "valid"
+    elif return_code == 1:
+        print "invalid"
+    else:
+        print "unknow return code"
