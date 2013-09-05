@@ -258,12 +258,6 @@ class HAProxyConfig():
         config_file.close()
         return config
 
-    def __str__(self):
-        return self.__repr__()
-
-    def __repr__(self):
-        return self.__readConfig()
-
 class Option():
     def __init__(self, param_name, params):
         self.name = param_name
