@@ -46,6 +46,18 @@ class HAProxyConfig():
             b = Backend(self.__getSectionWithName('backend', name))
             self.backends.append(b)
 
+    def getConfig(self):
+        out = ""
+        out += self.globalh.getConfig()
+        out += self.defaults.getConfig()
+        for l in self.listens:
+            out += l.getConfig()
+        for f in self.frontends:
+            out += f.getConfig()
+        for b in self.backends:
+            out += b.getConfig()
+        return out
+
     def getGlobal(self):
         return self.globalh
 
